@@ -1,0 +1,28 @@
+# capture and save the WTI unit configuration with an 'expect' script via SSH
+
+set timeout 30
+set device_ip "ENTER_IP_ADDRESS"
+set username "ENTER_YOUR_USERNAME"
+set password "ENTER_YOUR_PASSWORD"
+
+spawn ssh $username@$device_ip
+expect "Password"
+send "$password\r"
+
+# Wait for CLI prompt
+expect ">"
+
+# Issue /U and press Enter Important to send the extra enter
+send "/U\r"
+expect "Configure"
+send "\r"
+
+#capture the config output
+log_file -a NAME_YOUR_CONFIG_FILE.txt
+
+# This expect will print everything until it sees the last line of the config
+expect "</wti_config>"
+
+# Exit cleanly
+send "/x\r"
+expect eof
